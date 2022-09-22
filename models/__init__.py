@@ -1,0 +1,1 @@
+from .JAFFNet import JAFFNet
