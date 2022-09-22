@@ -1,4 +1,4 @@
-# yfhdm-JAFFNet
+# JAFFNet
 
 1. Install pytorch 
 
