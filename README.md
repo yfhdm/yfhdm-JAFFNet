@@ -5,7 +5,7 @@
    - The code is tested on python 3.7 and pytorch 1.10.2
    - Download test datasets and trained models (https://pan.baidu.com/s/1R0FURnsyxbDfAof8dC-dOw 
 提取码：qj71).
-   - Please put dataset in folder `./SemanticData/`
+   - Please put dataset in folder `./Data/`
 
 3. Test
 
