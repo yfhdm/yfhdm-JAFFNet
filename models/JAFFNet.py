@@ -1,5 +1,6 @@
 
 # Spatial attention abalation
+import torch
 from torchvision import models
 
 import torch.nn.functional as F
@@ -166,12 +167,12 @@ class JAFFM(nn.Module):
         )
         self.sigmoid = nn.Sigmoid()
         self.alpha = nn.Parameter(torch.zeros(1))
-        # self.se=SELayer(in_planes)
-        # self.cbam = CBAM(in_planes)
+
 
     def forward(self, x, y):
 
         # channal attetion
+        bs,c,h,w=x.size()
         a = self.conv_a(x)
         avg_out = self.conv3(self.conv1(self.avg_pool(a)))
         max_out = self.conv3(self.conv2(self.max_pool(a)))
@@ -185,13 +186,16 @@ class JAFFM(nn.Module):
         s_in = torch.cat([avg_out, max_out], dim=1)
         s_out = self.spatial_net(s_in)
 
-        # atten_map = c_out
-        atten_map = self.pro(c_out*s_out)
 
-        new_y = torch.mul(y, atten_map)
 
-        # atten=self.cbam(x)
-        # new_y=atten*y
+        c_out=c_out.view(bs,c,1)
+        s_out=s_out.view(bs,1,h*w)
+        atten=self.pro(torch.bmm(c_out,s_out).view(bs,c,h,w))
+
+
+        new_y = torch.mul(y, atten)
+
+
 
         return new_y * self.alpha + y
 
