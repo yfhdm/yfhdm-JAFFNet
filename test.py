@@ -104,27 +104,27 @@ if __name__ == "__main__":
 
     dataset='dagm'
     if dataset == 'mt':
-        test_dir = '.\SemanticData\Magnetic-tile-defect-datasets\Test\image\\'
+        test_dir = '.\Data\Magnetic-tile-defect-datasets\Test\image\\'
         test_img_list = glob.glob(test_dir + '*.jpg')
-        test_gt_dir = ".\SemanticData\Magnetic-tile-defect-datasets\Test\gt\\"
+        test_gt_dir = ".\Data\Magnetic-tile-defect-datasets\Test\gt\\"
         test_gt_list = []
         for img_path in test_img_list:
             img_name = img_path.split("\\")[-1]
             imgIdx = img_name.split(".")[0]
             test_gt_list.append(test_gt_dir + imgIdx + '.png')
     elif dataset == 'dagm':
-        test_dir = '.\SemanticData\DAGM\Test\image\\'
+        test_dir = '.\Data\DAGM\Test\image\\'
         test_img_list = glob.glob(test_dir + '*.PNG')
-        test_gt_dir = ".\SemanticData\DAGM\Test\gt\\"
+        test_gt_dir = ".\Data\DAGM\Test\gt\\"
         test_gt_list = []
         for img_path in test_img_list:
             img_name = img_path.split("\\")[-1]
             imgIdx = img_name.split(".")[0]
             test_gt_list.append(test_gt_dir + imgIdx + '.PNG')
     elif dataset == 'neu':
-        test_dir=".\SemanticData\SD-saliency-900\Test\image\\"
+        test_dir=".\Data\SD-saliency-900\Test\image\\"
         test_img_list = glob.glob(test_dir + '*.bmp')
-        test_gt_dir = ".\SemanticData\SD-saliency-900\Test\gt\\"
+        test_gt_dir = ".\Data\SD-saliency-900\Test\gt\\"
         test_gt_list = []
         for img_path in test_img_list:
             img_name = img_path.split("\\")[-1]
