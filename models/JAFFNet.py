@@ -56,6 +56,7 @@ class MRF(nn.Module):
             nn.BatchNorm2d(inner_channels),
             nn.ReLU(inplace=True),
         )
+
         self.conv2 = nn.Sequential(
             nn.Conv2d(in_channels, inner_channels, 1),
             nn.BatchNorm2d(inner_channels),
@@ -65,7 +66,6 @@ class MRF(nn.Module):
             nn.ReLU(inplace=True),
         )
 
-
         self.conv3 = nn.Sequential(
             nn.Conv2d(in_channels, inner_channels, 1),
             nn.BatchNorm2d(inner_channels),
@@ -74,7 +74,6 @@ class MRF(nn.Module):
             nn.BatchNorm2d(inner_channels),
             nn.ReLU(inplace=True),
             )
-
 
         self.pro = nn.Sequential(
             nn.Conv2d(inner_channels * 3, out_channels, 1),
@@ -87,9 +86,8 @@ class MRF(nn.Module):
         feat1 = self.conv1(x)
         feat2 = self.conv2(x)
         feat3 = self.conv3(x)
-
-
         out = torch.cat([feat1, feat2, feat3], dim=1)
+
         return self.pro(out)
 
 class DRF(nn.Module):
@@ -178,7 +176,6 @@ class JAFFM(nn.Module):
         max_out = self.conv3(self.conv2(self.max_pool(a)))
         c_out = self.sigmoid(avg_out + max_out)
 
-
         # spacial attetion
         b = self.conv_b(x)
         avg_out = torch.mean(b, dim=1, keepdim=True)
@@ -186,16 +183,13 @@ class JAFFM(nn.Module):
         s_in = torch.cat([avg_out, max_out], dim=1)
         s_out = self.spatial_net(s_in)
 
-
-
+        # map fusion
         c_out=c_out.view(bs,c,1)
         s_out=s_out.view(bs,1,h*w)
         atten=self.pro(torch.bmm(c_out,s_out).view(bs,c,h,w))
 
-
+        #element-wise product
         new_y = torch.mul(y, atten)
-
-
 
         return new_y * self.alpha + y
 
