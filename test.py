@@ -2,23 +2,17 @@ import time
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from PIL import Image
-import glob
-import timeit
-import  os
 from data_loader import SalObjDataset
-from skimage import io, transform, color
+from skimage import io
 from data_loader import RescaleT
 from data_loader import ToTensorLab
-import os
 from sod_metrics import MAE, Smeasure, WeightedFmeasure
 import numpy as np
-import sys
-
-from models import JAFFNet
 import torch
 import glob
-
 from models import JAFFNet
+
+
 def eval_adp_e(y_pred, y):
 
     th = y_pred.mean() * 2
@@ -30,8 +24,8 @@ def eval_adp_e(y_pred, y):
         enhanced = y_pred_th
     else:  # normal cases
         fm = y_pred_th - y_pred_th.mean()
-        msd = y - y.mean()
-        align_matrix = 2 * msd * fm / (msd * msd + fm * fm + 1e-20)
+        gt = y - y.mean()
+        align_matrix = 2 * gt * fm / (gt * gt + fm * fm + 1e-20)
         enhanced = ((align_matrix + 1) * (align_matrix + 1)) / 4
     return torch.sum(enhanced) / (y.numel() - 1 + 1e-20)
 
@@ -60,8 +54,8 @@ def test(model, test_img_list,test_gt_list):
 
             pred = Image.fromarray(pred * 255).convert('RGB')
 
-            msd = io.imread(test_img_list[i_test])
-            pred = pred.resize((msd.shape[1], msd.shape[0]), resample=Image.BILINEAR)
+            image = io.imread(test_img_list[i_test])
+            pred = pred.resize((image.shape[1], image.shape[0]), resample=Image.BILINEAR)
             pred = np.array(pred)[:, :, 0]
 
             gt = io.imread(test_gt_list[i_test])
@@ -87,8 +81,8 @@ def test(model, test_img_list,test_gt_list):
 
         # print(res.shape)
         pred = Image.fromarray(pred * 255).convert('RGB')
-        msd = io.imread(test_img_list[i_test])
-        pred = pred.resize((msd.shape[1], msd.shape[0]), resample=Image.BILINEAR)
+        image = io.imread(test_img_list[i_test])
+        pred = pred.resize((image.shape[1], image.shape[0]), resample=Image.BILINEAR)
         pred = np.array(pred)[:, :, 0]
 
         gt = io.imread(test_gt_list[i_test])
